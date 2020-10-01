@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import useSwr,{SWRConfig}from "swr"
+const feacher=(...args)=>fetch(...args).then(res=>res.json())
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <SWRConfig value={feacher}>
+        <Crismes/>
+      </SWRConfig>
   );
 }
 
 export default App;
+function Crismes(){
+  const url="https://jsonplaceholder.typicode.com/posts/1/comments"
+  const{data,error}=useSwr(url)
+  if(!data){
+    return  <div>data success</div>
+  }
+  if(error){
+    return <div>error</div>
+  }
+  return <DataCrimes crimes={data}/>
+
+}
+function DataCrimes({crimes}){
+  return(
+      <>
+        <pre>
+          {
+            JSON.stringify(crimes,null,2)
+          }
+        </pre>
+        </>
+  )
+}
